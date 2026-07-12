@@ -1,0 +1,16 @@
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).parent
+DATASET_PATH = PROJECT_ROOT / "data" / "raw" / "color"
+MODELS_PATH = PROJECT_ROOT / "models"
+OUTPUTS_PATH = PROJECT_ROOT / "outputs"
+
+IMAGE_SIZE = (224, 224)
+BATCH_SIZE = 32
+VALIDATION_SPLIT = 0.20
+
+SEED = 42
+EPOCHS = 20
+LEARNING_RATE = 0.001
+NUM_CLASSES = 38
