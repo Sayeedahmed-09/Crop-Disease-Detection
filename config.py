@@ -1,21 +1,29 @@
 from pathlib import Path
 
-
 PROJECT_ROOT = Path(__file__).parent
+
 DATASET_PATH = PROJECT_ROOT / "data" / "raw" / "color"
 MODELS_PATH = PROJECT_ROOT / "models"
 OUTPUTS_PATH = PROJECT_ROOT / "outputs"
 
 IMAGE_SIZE = (224, 224)
-BATCH_SIZE = 32
+
+BATCH_SIZE = 16
+
 VALIDATION_SPLIT = 0.20
 
 SEED = 42
-EPOCHS = 20
-LEARNING_RATE = 0.001
-PATIENCE = 5
-MIN_LEARNING_RATE = 1e-6
+
 NUM_CLASSES = 38
 
 MODEL_NAME = "EfficientNetB0"
+
 DROPOUT_RATE = 0.3
+
+LEARNING_RATE = 1e-4
+
+EPOCHS = 5
+
+PATIENCE = 5
+
+MIN_LEARNING_RATE = 1e-6

@@ -12,11 +12,6 @@ from config import (
 AUTOTUNE = tf.data.AUTOTUNE
 
 
-def normalize_images(images, labels):
-    images = tf.cast(images, tf.float32) / 255.0
-    return images, labels
-
-
 def load_dataset(
     dataset_path=DATASET_PATH,
     image_size=IMAGE_SIZE,
@@ -24,10 +19,8 @@ def load_dataset(
     validation_split=VALIDATION_SPLIT,
     seed=SEED,
 ):
-    dataset_path = Path(dataset_path)
 
-    if not dataset_path.exists():
-        raise FileNotFoundError(f"Dataset not found: {dataset_path}")
+    dataset_path = Path(dataset_path)
 
     train_dataset = tf.keras.utils.image_dataset_from_directory(
         dataset_path,
@@ -38,7 +31,6 @@ def load_dataset(
         batch_size=batch_size,
     )
 
-    # Save class names before applying transformations
     class_names = train_dataset.class_names
 
     validation_dataset = tf.keras.utils.image_dataset_from_directory(
@@ -49,17 +41,8 @@ def load_dataset(
         image_size=image_size,
         batch_size=batch_size,
     )
-    train_dataset = train_dataset.map(
-        normalize_images,
-        num_parallel_calls=AUTOTUNE,
-    )
 
-    validation_dataset = validation_dataset.map(
-        normalize_images,
-        num_parallel_calls=AUTOTUNE,
-    )
-
-    train_dataset = train_dataset.cache().prefetch(AUTOTUNE)
-    validation_dataset = validation_dataset.cache().prefetch(AUTOTUNE)
+    train_dataset = train_dataset.prefetch(AUTOTUNE)
+    validation_dataset = validation_dataset.prefetch(AUTOTUNE)
 
     return train_dataset, validation_dataset, class_names
