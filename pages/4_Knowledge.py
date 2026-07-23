@@ -1,28 +1,24 @@
 """
 ==========================================================
-File: 5_Analytics.py
+File: 4_Knowledge.py
 Project: AgroSentry
 
 Description:
-    Prediction history analytics — totals, healthy vs
-    diseased breakdown, and trends over time.
+    Disease knowledge base — browse full information for
+    any class the model can recognize.
 ==========================================================
 """
 
-import pandas as pd
 import streamlit as st
 
 from src.ui.layout import configure_page
 from src.utils.theme import load_theme
 from components.sidebar import render_sidebar
 from components.hero import render_hero
-from components.metric_card import render_metric_card
 
-from src.services.history_service import (
-    get_history_dataframe,
-    get_statistics,
-    clear_history,
-)
+from src.ui.knowledge import render_disease_information
+from src.services.prediction_service import get_class_names
+from src.services.disease_service import load_disease_info
 
 
 configure_page()
@@ -30,73 +26,25 @@ load_theme()
 render_sidebar()
 
 render_hero(
-    title="Prediction Analytics",
-    subtitle="Trends and statistics across every prediction AgroSentry has made.",
+    title="Disease Knowledge Base",
+    subtitle="Browse detailed information for every disease AgroSentry can recognize.",
 )
 
-history = get_history_dataframe()
+class_names = get_class_names()
 
-if history.empty:
-    st.info("No predictions recorded yet. Run a detection to start building analytics.")
-    st.page_link("pages/1_Detection.py", label="Go to Detection", use_container_width=True)
-    st.stop()
+# Default to the last-predicted class if one exists, otherwise the first entry
+default_class = st.session_state.get("last_predicted_class", class_names[0])
+default_index = (
+    class_names.index(default_class) if default_class in class_names else 0
+)
 
-stats = get_statistics()
+selected_class = st.selectbox(
+    "Select a crop / disease",
+    options=class_names,
+    index=default_index,
+    format_func=lambda name: load_disease_info(name)["display_name"],
+)
 
-# ==========================================================
-# Summary metrics
-# ==========================================================
+disease_info = load_disease_info(selected_class)
 
-col1, col2, col3, col4 = st.columns(4)
-
-with col1:
-    render_metric_card("Total Predictions", str(stats["total_predictions"]), "bi-graph-up")
-
-with col2:
-    render_metric_card("Healthy", str(stats["healthy_predictions"]), "bi-check-circle-fill")
-
-with col3:
-    render_metric_card("Diseased", str(stats["diseased_predictions"]), "bi-exclamation-triangle-fill")
-
-with col4:
-    render_metric_card("Avg. Confidence", f"{stats['average_confidence']:.2f}%", "bi-bullseye")
-
-st.divider()
-
-# ==========================================================
-# Trends
-# ==========================================================
-
-left_col, right_col = st.columns(2)
-
-with left_col:
-    st.subheader("Predictions by Crop")
-    crop_counts = history["Crop"].value_counts()
-    st.bar_chart(crop_counts)
-
-with right_col:
-    st.subheader("Predictions by Disease")
-    disease_counts = history["Disease"].value_counts()
-    st.bar_chart(disease_counts)
-
-st.subheader("Confidence Over Time")
-history_sorted = history.copy()
-history_sorted["Timestamp"] = pd.to_datetime(history_sorted["Timestamp"])
-history_sorted = history_sorted.sort_values("Timestamp")
-st.line_chart(history_sorted.set_index("Timestamp")["Confidence"])
-
-st.divider()
-
-# ==========================================================
-# Raw history table
-# ==========================================================
-
-st.subheader("Full Prediction History")
-st.dataframe(history.sort_values("Timestamp", ascending=False), use_container_width=True)
-
-with st.expander("Clear history"):
-    st.warning("This permanently deletes all recorded predictions.")
-    if st.button("Clear all history", type="primary"):
-        clear_history()
-        st.success("History cleared.")
-        st.rerun()
+render_disease_information(disease_info)
