@@ -1,44 +1,64 @@
+"""
+predictor.py
+
+Handles:
+    - Model Loading
+    - Image Preprocessing
+    - Disease Prediction
+"""
+
 from pathlib import Path
 
 import numpy as np
 import tensorflow as tf
 
-from config import IMAGE_SIZE
+from src.inference.image_utils import preprocess_image
 
 
 def load_trained_model(model_path: Path):
     """
     Load the trained TensorFlow model.
+
+    Parameters
+    ----------
+    model_path : Path
+
+    Returns
+    -------
+    tf.keras.Model
     """
 
     return tf.keras.models.load_model(model_path)
 
 
-def preprocess_image(image):
+def predict_image(
+    model,
+    image,
+    class_names,
+):
     """
-    Resize and preprocess the uploaded image.
-    """
+    Predict crop disease.
 
-    image = image.resize(IMAGE_SIZE)
+    Parameters
+    ----------
+    model
+        Trained TensorFlow model.
 
-    image_array = tf.keras.utils.img_to_array(image)
+    image
+        Uploaded PIL Image.
 
-    image_array = np.expand_dims(
-        image_array,
-        axis=0,
-    )
+    class_names
+        List of disease classes.
 
-    return image_array
-
-
-def predict_image(model, image, class_names):
-    """
-    Predict the disease class for an uploaded image.
-
-    Returns:
-        predicted_class (str)
-        confidence (float)
-        probabilities (numpy.ndarray)
+    Returns
+    -------
+    tuple
+        (
+            predicted_class,
+            predicted_index,
+            confidence,
+            probabilities,
+        )
     """
 
     image_array = preprocess_image(image)
@@ -50,14 +70,21 @@ def predict_image(model, image, class_names):
 
     probabilities = predictions[0]
 
-    predicted_index = np.argmax(probabilities)
+    predicted_index = int(
+        np.argmax(probabilities)
+    )
 
-    predicted_class = class_names[predicted_index]
+    predicted_class = class_names[
+        predicted_index
+    ]
 
-    confidence = float(probabilities[predicted_index])
+    confidence = float(
+        probabilities[predicted_index]
+    )
 
     return (
         predicted_class,
+        predicted_index,
         confidence,
         probabilities,
     )

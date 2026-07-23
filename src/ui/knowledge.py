@@ -29,7 +29,7 @@ def render_information_list(title: str, items: list) -> None:
         return
 
     for item in items:
-        st.markdown(f"• {item}")
+        st.markdown(f"- {item}")
 
 
 def render_disease_information(
@@ -43,7 +43,7 @@ def render_disease_information(
 
     with st.container(border=True):
 
-        st.subheader("📖 Description")
+        st.subheader("Description")
 
         st.write(
             disease_info.get(
@@ -54,60 +54,28 @@ def render_disease_information(
 
     st.divider()
 
+    render_information_list("Symptoms", disease_info.get("symptoms", []))
+
+    st.divider()
+
+    render_information_list("Treatment", disease_info.get("treatment", []))
+
+    st.divider()
+
+    render_information_list("Prevention", disease_info.get("prevention", []))
+
+    st.divider()
+
     render_information_list(
-        "🍂 Symptoms",
-        disease_info.get(
-            "symptoms",
-            [],
-        ),
+        "Organic Control", disease_info.get("organic_control", [])
     )
 
     st.divider()
 
     render_information_list(
-        "💊 Treatment",
-        disease_info.get(
-            "treatment",
-            [],
-        ),
+        "Chemical Control", disease_info.get("chemical_control", [])
     )
 
     st.divider()
 
-    render_information_list(
-        "🛡 Prevention",
-        disease_info.get(
-            "prevention",
-            [],
-        ),
-    )
-
-    st.divider()
-
-    render_information_list(
-        "🌱 Organic Control",
-        disease_info.get(
-            "organic_control",
-            [],
-        ),
-    )
-
-    st.divider()
-
-    render_information_list(
-        "🧪 Chemical Control",
-        disease_info.get(
-            "chemical_control",
-            [],
-        ),
-    )
-
-    st.divider()
-
-    render_information_list(
-        "👨‍🌾 Farmer Tips",
-        disease_info.get(
-            "farmer_tips",
-            [],
-        ),
-    )
+    render_information_list("Farmer Tips", disease_info.get("farmer_tips", []))

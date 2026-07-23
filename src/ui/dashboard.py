@@ -1,7 +1,7 @@
 """
 dashboard.py
 
-Displays the prediction dashboard for AgriVision AI.
+Displays the prediction dashboard for AgroSentry.
 
 Contains:
     - Prediction Summary
@@ -35,33 +35,27 @@ def render_prediction_summary(
 
         with st.container(border=True):
 
-            st.subheader("🦠 Disease")
+            st.subheader("Disease")
 
-            st.markdown(
-                f"### {disease_info['display_name']}"
-            )
+            st.markdown(f"### {disease_info['display_name']}")
 
         with st.container(border=True):
 
-            st.subheader("🌱 Crop")
+            st.subheader("Crop")
 
-            st.write(
-                disease_info["crop"]
-            )
+            st.write(disease_info["crop"])
 
         with st.container(border=True):
 
-            st.subheader("⚠ Severity")
+            st.subheader("Severity")
 
-            st.write(
-                disease_info["severity"]
-            )
+            st.write(disease_info["severity"])
 
     with right_column:
 
         with st.container(border=True):
 
-            st.subheader("🎯 Confidence")
+            st.subheader("Confidence")
 
             st.metric(
                 label="Prediction Confidence",
@@ -69,21 +63,16 @@ def render_prediction_summary(
             )
 
             st.info(
-                f"{confidence_color(confidence)} "
                 f"{confidence_level(confidence)} Confidence"
             )
 
-            st.caption(
-                confidence_message(confidence)
-            )
+            st.caption(confidence_message(confidence))
 
         with st.container(border=True):
 
-            st.subheader("🧫 Disease Type")
+            st.subheader("Disease Type")
 
-            st.write(
-                disease_info["disease_type"]
-            )
+            st.write(disease_info["disease_type"])
 
 
 def render_top_predictions(
@@ -93,38 +82,21 @@ def render_top_predictions(
     Display Top-3 model predictions.
     """
 
-    st.subheader("🏆 Top Predictions")
+    st.subheader("Top Predictions")
 
-    medals = (
-        "🥇",
-        "🥈",
-        "🥉",
-    )
-
-    for medal, prediction in zip(
-        medals,
-        predictions,
-    ):
+    for rank, prediction in enumerate(predictions[:3], start=1):
 
         confidence = prediction["confidence"] * 100
 
         with st.container(border=True):
 
-            left, right = st.columns(
-                [5, 1]
-            )
+            left, right = st.columns([5, 1])
 
             with left:
-
-                st.write(
-                    f"{medal} **{prediction['display_name']}**"
-                )
+                st.write(f"{rank}. **{prediction['display_name']}**")
 
             with right:
-
-                st.write(
-                    f"{confidence:.2f}%"
-                )
+                st.write(f"{confidence:.2f}%")
 
 
 def render_prediction_dashboard(
@@ -138,13 +110,8 @@ def render_prediction_dashboard(
 
     st.header("Prediction Dashboard")
 
-    render_prediction_summary(
-        disease_info,
-        confidence,
-    )
+    render_prediction_summary(disease_info, confidence)
 
     st.divider()
 
-    render_top_predictions(
-        top_predictions,
-    )
+    render_top_predictions(top_predictions)

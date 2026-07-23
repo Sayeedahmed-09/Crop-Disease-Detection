@@ -1,0 +1,327 @@
+/* ==========================================================
+   AgroSentry - Global Theme
+   Fixed: explicit text colors throughout so headings, body
+   text, and sidebar content are all visible on the dark
+   background (previously fell back to Streamlit's default
+   dark-gray text, which was unreadable).
+   ========================================================== */
+
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css');
+
+:root{
+    --primary: #16A34A;
+    --secondary: #38BDF8;
+    --bg: #0F172A;
+    --card: #1E293B;
+    --sidebar: #111827;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --border: #334155;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --error: #EF4444;
+}
+
+/* App shell */
+.stApp{
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+/* Force light text everywhere by default, including all
+   Streamlit-generated markdown, headings and body copy */
+.stApp, .stApp p, .stApp span, .stApp li, .stApp label,
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
+.stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span,
+.stCaption, .stText{
+    color: var(--text) !important;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"]{
+    background-color: var(--sidebar);
+    border-right: 1px solid var(--border);
+}
+section[data-testid="stSidebar"] *{
+    color: var(--text) !important;
+}
+section[data-testid="stSidebar"] .stCaption,
+section[data-testid="stSidebar"] small{
+    color: var(--muted) !important;
+}
+
+/* Muted / caption text should stay muted, not pure white */
+.stCaption, [data-testid="stCaptionContainer"]{
+    color: var(--muted) !important;
+}
+
+/* Metric widget text (st.metric) */
+[data-testid="stMetricLabel"]{
+    color: var(--muted) !important;
+}
+[data-testid="stMetricValue"]{
+    color: var(--text) !important;
+}
+
+/* Buttons */
+.stButton button{
+    color: var(--text) !important;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+}
+.stButton button:hover{
+    border-color: var(--primary);
+    color: var(--primary) !important;
+}
+
+/* Alert boxes (st.info / st.success / st.warning / st.error)
+   — keep Streamlit's own background tint, just ensure text
+   inside remains readable */
+div[data-testid="stAlert"] p{
+    color: inherit !important;
+}
+
+/* Containers with border=True */
+div[data-testid="stVerticalBlockBorderWrapper"]{
+    background-color: var(--card);
+    border: 1px solid var(--border) !important;
+    border-radius: 12px;
+}
+
+/* Top header/toolbar (Deploy button, menu, etc.) — left
+   white by default, doesn't follow the dark theme unless
+   explicitly styled. */
+header[data-testid="stHeader"]{
+    background-color: var(--bg) !important;
+}
+header[data-testid="stHeader"] *{
+    color: var(--text) !important;
+}
+div[data-testid="stToolbar"]{
+    background-color: var(--bg) !important;
+}
+div[data-testid="stToolbar"] *{
+    color: var(--text) !important;
+}
+div[data-testid="stDecoration"]{
+    background-image: none !important;
+    background-color: var(--bg) !important;
+}
+
+/* Dataframe / table text */
+.stDataFrame, .stDataFrame *{
+    color: var(--text) !important;
+}
+
+/* File uploader — Streamlit keeps its dropzone background
+   light by default regardless of theme, which made the white
+   text we force elsewhere invisible. Give it a dark background
+   to match the rest of the app so text stays readable. */
+[data-testid="stFileUploaderDropzone"]{
+    background-color: var(--card) !important;
+    border: 1px dashed var(--border) !important;
+    border-radius: 10px;
+}
+[data-testid="stFileUploaderDropzone"] *{
+    color: var(--text) !important;
+}
+[data-testid="stFileUploaderDropzone"] small{
+    color: var(--muted) !important;
+}
+[data-testid="stFileUploaderDropzone"] button{
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+}
+[data-testid="stFileUploaderDropzone"] button:hover{
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+}
+/* Uploaded file row (filename + remove button after upload) */
+[data-testid="stFileUploaderFile"]{
+    background-color: var(--card) !important;
+    color: var(--text) !important;
+}
+[data-testid="stFileUploaderFile"] *{
+    color: var(--text) !important;
+}
+
+/* Hero */
+.hero{
+    background: linear-gradient(135deg, var(--card), var(--sidebar));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 32px;
+    margin-bottom: 24px;
+}
+.hero h1{
+    margin: 0 0 8px;
+    color: var(--text) !important;
+    font-size: 32px;
+}
+.hero p{
+    margin: 0;
+    color: var(--muted) !important;
+    font-size: 16px;
+}
+
+/* Metric card */
+.metric-card{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+}
+.metric-icon{
+    font-size: 24px;
+    color: var(--primary);
+    background: rgba(22,163,74,0.12);
+    border-radius: 10px;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.metric-title{
+    color: var(--muted) !important;
+    font-size: 13px;
+}
+.metric-value{
+    color: var(--text) !important;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Upload card */
+.upload-card{
+    text-align: center;
+    background: var(--card);
+    border: 1.5px dashed var(--border);
+    border-radius: 14px;
+    padding: 32px 20px 12px;
+    margin-bottom: 10px;
+}
+.upload-icon{
+    font-size: 34px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+.upload-card h2{
+    color: var(--text) !important;
+    font-size: 20px;
+    margin: 6px 0;
+}
+.upload-card p{
+    color: var(--muted) !important;
+    font-size: 13.5px;
+}
+
+/* Prediction card */
+.prediction-card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+}
+.prediction-header{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--secondary) !important;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+.prediction-disease{
+    color: var(--text) !important;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.prediction-confidence{
+    color: var(--muted) !important;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+.prediction-confidence strong{
+    color: var(--text) !important;
+    margin-left: 6px;
+}
+.prediction-progress{
+    height: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+.prediction-progress-bar{
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 4px;
+}
+.prediction-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+.prediction-grid small{
+    color: var(--muted) !important;
+    font-size: 11.5px;
+    text-transform: uppercase;
+}
+.prediction-grid h5{
+    color: var(--text) !important;
+    margin: 2px 0 0;
+    font-size: 15px;
+}
+
+/* Disease card / description */
+.disease-description{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+}
+.disease-description h4{
+    color: var(--text) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+    font-size: 16px;
+}
+.disease-description p{
+    color: var(--muted) !important;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+.disease-card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+}
+.disease-card-title{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary) !important;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.disease-card ul{
+    margin: 0;
+    padding-left: 18px;
+    color: var(--muted) !important;
+    font-size: 13.5px;
+    line-height: 1.8;
+}
